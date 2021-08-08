@@ -3,33 +3,33 @@ import redis
 
 class TestRedis:
 
-    def __init__(self):
-        self.my_redis = redis.Redis(host="localhost", port="6379")
+    def __init__(self, host="localhost", port="6379"):
+        self.connection = redis.Redis(host=host, port=port)
 
     def connect_to_redis(self, host, port):
         try:
-            self.my_redis = redis.Redis(host=host, port=port)
+            self.connection = redis.Redis(host=host, port=port)
         except redis.connection.ConnectionError:
             print("Wrong Host IP or Port entered")
             raise
 
     def list_all_keys(self):
-        keys = self.my_redis.keys()
+        keys = self.connection.keys()
         for i in range(0, len(keys)):
             keys[i] = keys[i].decode('utf-8')
         return keys
 
     def get_keys(self, pattern):
-        keys = self.my_redis.keys(pattern)
+        keys = self.connection.keys(pattern)
         for i in range(0, len(keys)):
             keys[i] = keys[i].decode('utf-8')
         return keys
 
     def delete_key(self, key):
-        self.my_redis.delete(key)
+        self.connection.delete(key)
 
     def clean_database(self):
-        self.my_redis.flushdb()
+        self.connection.flushdb()
 
-    def add_key(self, key, value):
-        self.my_redis.set(key, value)
+    def add_key_value(self, key, value):
+        self.connection.set(key, value)
